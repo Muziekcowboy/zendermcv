@@ -14,7 +14,7 @@
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
+      min-height: 100vh;
       margin: 0;
       padding: 20px;
     }
@@ -34,25 +34,13 @@
     #playButton:hover {
       background: #ff7700;
     }
-    #playerControls {
-      margin-top: 20px;
-      display: none; /* verborgen tot Play geklikt */
-    }
-    button.control {
-      padding: 10px 20px;
-      font-size: 16px;
-      margin: 5px;
-      border-radius: 5px;
-      cursor: pointer;
+    #playerFrame {
+      margin-top: 30px;
+      width: 100%;
+      max-width: 400px;
+      height: 120px;
       border: none;
-      background: #ff5500;
-      color: white;
-    }
-    button.control:hover {
-      background: #ff7700;
-    }
-    audio {
-      display: none; /* verberg de standaard player */
+      display: none; /* zichtbaar na Play */
     }
   </style>
 </head>
@@ -60,35 +48,21 @@
   <h1>Luister live naar mijn radio!</h1>
   <button id="playButton">▶ Play Stream</button>
 
-  <div id="playerControls">
-    <button class="control" onclick="pauseAudio()">⏸ Pause</button>
-    <button class="control" onclick="playAudio()">▶ Play</button>
-  </div>
-
-  <audio id="audio" preload="none">
-    <source src="http://uk22freenew.listen2myradio.com:31173/;" type="audio/mpeg">
-    Je browser ondersteunt geen audio element.
-  </audio>
+  <!-- Embedded player iframe -->
+  <iframe id="playerFrame"
+          src="https://streema.com/radio/uk22freenew.listen2myradio.com"
+          allow="autoplay">
+  </iframe>
 
   <script>
-    const audio = document.getElementById('audio');
     const playButton = document.getElementById('playButton');
-    const playerControls = document.getElementById('playerControls');
+    const playerFrame = document.getElementById('playerFrame');
 
-    function playAudio() {
-      audio.play().catch(err => {
-        alert("Autoplay is geblokkeerd. Tik op Play om te starten.");
-      });
-      playerControls.style.display = "block";
+    playButton.addEventListener('click', () => {
+      // Toon de iframe player en verberg de Play-knop
+      playerFrame.style.display = "block";
       playButton.style.display = "none";
-    }
-
-    function pauseAudio() {
-      audio.pause();
-    }
-
-    // Grote centrale knop activeert de stream
-    playButton.addEventListener('click', playAudio);
+    });
   </script>
 </body>
 </html>
