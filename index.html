@@ -3,13 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Mijn Radio Stream</title>
+<title>Live Radio Stream</title>
 <style>
   body {
     font-family: Arial, sans-serif;
-    background: #1a1a1a;
-    color: #f0f0f0;
-    text-align: center;
+    background: #111;
+    color: #fff;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -17,6 +16,7 @@
     min-height: 100vh;
     margin: 0;
     padding: 20px;
+    text-align: center;
   }
   h1 {
     margin-bottom: 40px;
@@ -35,47 +35,43 @@
     background: #ff7700;
   }
   audio {
-    display: none;
-  }
-  @media (max-width: 600px) {
-    #playButton {
-      width: 80%;
-    }
+    margin-top: 30px;
+    width: 100%;
+    max-width: 400px;
   }
 </style>
 </head>
 <body>
-  <h1>Luister live naar mijn radio!</h1>
-  <button id="playButton">▶ Play Stream</button>
 
-  <audio id="desktopAudio" preload="none">
-    <source src="http://uk22freenew.listen2myradio.com:31173/;" type="audio/mpeg">
-    Je browser ondersteunt geen audio element.
-  </audio>
+<h1>Luister live naar mijn radio!</h1>
+
+<button id="playButton">▶ Play Stream</button>
+
+<audio id="player" preload="none" controls>
+  <source src="http://uk22freenew.listen2myradio.com:31173/;" type="audio/mpeg">
+  Je browser ondersteunt geen audio.
+</audio>
 
 <script>
-  const playButton = document.getElementById('playButton');
-  const audio = document.getElementById('desktopAudio');
+const playButton = document.getElementById('playButton');
+const player = document.getElementById('player');
 
-  playButton.addEventListener('click', () => {
-    // Detecteer mobiel of desktop
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+// Verberg audio-element totdat Play wordt ingedrukt (optie)
+player.style.display = 'none';
 
-    if (isMobile) {
-      // Op mobiel → link naar mediaplayer app
-      const streamUrl = "http://uk22freenew.listen2myradio.com:31173/;";
-      // iOS en Android openen standaard de juiste app (Music / VLC / Radio app)
-      window.location.href = streamUrl;
-    } else {
-      // Desktop → gebruik HTML5 audio
-      audio.play().catch(err => {
-        alert("Autoplay geblokkeerd. Klik nogmaals op Play.");
-      });
-    }
-
-    // Verberg de Play-knop na klikken
-    playButton.style.display = "none";
+playButton.addEventListener('click', () => {
+  // Toon audio element
+  player.style.display = 'block';
+  
+  // Start stream
+  player.play().catch(() => {
+    alert("Klik nogmaals op Play als het niet start.");
   });
+
+  // Verberg Play-knop
+  playButton.style.display = 'none';
+});
 </script>
+
 </body>
 </html>
