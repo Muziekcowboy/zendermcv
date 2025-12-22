@@ -15,23 +15,60 @@
     h1 {
       margin-bottom: 40px;
     }
-    audio {
-      width: 300px;
-      outline: none;
+    #player {
+      margin-top: 20px;
+    }
+    button {
+      background: #ff5500;
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      font-size: 16px;
+      margin: 5px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    button:hover {
+      background: #ff7700;
     }
     @media (max-width: 500px) {
-      audio {
-        width: 90%;
+      button {
+        width: 80%;
+        font-size: 18px;
       }
     }
   </style>
 </head>
 <body>
   <h1>Luister live naar mijn radio!</h1>
-  <audio controls autoplay>
-    <source src="http://uk22freenew.listen2myradio.com:31173/;" type="audio/mpeg">
-    Je browser ondersteunt geen audio element.
-  </audio>
-  <p>Stream via je browser of kopieer de URL naar een media player zoals VLC of Winamp.</p>
+  <div id="player">
+    <audio id="audio" preload="none">
+      <source src="http://uk22freenew.listen2myradio.com:31173/;" type="audio/mpeg">
+      Je browser ondersteunt geen audio element.
+    </audio>
+    <div>
+      <button onclick="playAudio()">Play</button>
+      <button onclick="pauseAudio()">Pause</button>
+    </div>
+  </div>
+
+  <script>
+    const audio = document.getElementById('audio');
+
+    function playAudio() {
+      audio.play().catch(err => {
+        alert("Autoplay is geblokkeerd. Klik nogmaals op Play.");
+      });
+    }
+
+    function pauseAudio() {
+      audio.pause();
+    }
+
+    // Optional: start automatisch zodra de gebruiker interactie heeft
+    document.body.addEventListener('click', () => {
+      if(audio.paused) audio.play().catch(()=>{});
+    }, { once: true });
+  </script>
 </body>
 </html>
