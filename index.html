@@ -1,68 +1,81 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Mijn Radio Stream</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #1a1a1a;
-      color: #f0f0f0;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      margin-bottom: 40px;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mijn Radio Stream</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: #1a1a1a;
+    color: #f0f0f0;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+    padding: 20px;
+  }
+  h1 {
+    margin-bottom: 40px;
+  }
+  #playButton {
+    background: #ff5500;
+    border: none;
+    color: white;
+    padding: 20px 40px;
+    font-size: 24px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  #playButton:hover {
+    background: #ff7700;
+  }
+  audio {
+    display: none;
+  }
+  @media (max-width: 600px) {
     #playButton {
-      background: #ff5500;
-      border: none;
-      color: white;
-      padding: 20px 40px;
-      font-size: 24px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: background 0.3s;
+      width: 80%;
     }
-    #playButton:hover {
-      background: #ff7700;
-    }
-    #playerFrame {
-      margin-top: 30px;
-      width: 100%;
-      max-width: 400px;
-      height: 120px;
-      border: none;
-      display: none; /* zichtbaar na Play */
-    }
-  </style>
+  }
+</style>
 </head>
 <body>
   <h1>Luister live naar mijn radio!</h1>
   <button id="playButton">▶ Play Stream</button>
 
-  <!-- Embedded player iframe -->
-  <iframe id="playerFrame"
-          src="https://streema.com/radio/uk22freenew.listen2myradio.com"
-          allow="autoplay">
-  </iframe>
+  <audio id="desktopAudio" preload="none">
+    <source src="http://uk22freenew.listen2myradio.com:31173/;" type="audio/mpeg">
+    Je browser ondersteunt geen audio element.
+  </audio>
 
-  <script>
-    const playButton = document.getElementById('playButton');
-    const playerFrame = document.getElementById('playerFrame');
+<script>
+  const playButton = document.getElementById('playButton');
+  const audio = document.getElementById('desktopAudio');
 
-    playButton.addEventListener('click', () => {
-      // Toon de iframe player en verberg de Play-knop
-      playerFrame.style.display = "block";
-      playButton.style.display = "none";
-    });
-  </script>
+  playButton.addEventListener('click', () => {
+    // Detecteer mobiel of desktop
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
+    if (isMobile) {
+      // Op mobiel → link naar mediaplayer app
+      const streamUrl = "http://uk22freenew.listen2myradio.com:31173/;";
+      // iOS en Android openen standaard de juiste app (Music / VLC / Radio app)
+      window.location.href = streamUrl;
+    } else {
+      // Desktop → gebruik HTML5 audio
+      audio.play().catch(err => {
+        alert("Autoplay geblokkeerd. Klik nogmaals op Play.");
+      });
+    }
+
+    // Verberg de Play-knop na klikken
+    playButton.style.display = "none";
+  });
+</script>
 </body>
 </html>
