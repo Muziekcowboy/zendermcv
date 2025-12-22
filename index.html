@@ -10,65 +10,85 @@
       background: #1a1a1a;
       color: #f0f0f0;
       text-align: center;
-      padding: 50px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      padding: 20px;
     }
     h1 {
       margin-bottom: 40px;
     }
-    #player {
-      margin-top: 20px;
-    }
-    button {
+    #playButton {
       background: #ff5500;
       border: none;
       color: white;
+      padding: 20px 40px;
+      font-size: 24px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    #playButton:hover {
+      background: #ff7700;
+    }
+    #playerControls {
+      margin-top: 20px;
+      display: none; /* verborgen tot Play geklikt */
+    }
+    button.control {
       padding: 10px 20px;
       font-size: 16px;
       margin: 5px;
-      cursor: pointer;
       border-radius: 5px;
+      cursor: pointer;
+      border: none;
+      background: #ff5500;
+      color: white;
     }
-    button:hover {
+    button.control:hover {
       background: #ff7700;
     }
-    @media (max-width: 500px) {
-      button {
-        width: 80%;
-        font-size: 18px;
-      }
+    audio {
+      display: none; /* verberg de standaard player */
     }
   </style>
 </head>
 <body>
   <h1>Luister live naar mijn radio!</h1>
-  <div id="player">
-    <audio id="audio" preload="none">
-      <source src="http://uk22freenew.listen2myradio.com:31173/;" type="audio/mpeg">
-      Je browser ondersteunt geen audio element.
-    </audio>
-    <div>
-      <button onclick="playAudio()">Play</button>
-      <button onclick="pauseAudio()">Pause</button>
-    </div>
+  <button id="playButton">▶ Play Stream</button>
+
+  <div id="playerControls">
+    <button class="control" onclick="pauseAudio()">⏸ Pause</button>
+    <button class="control" onclick="playAudio()">▶ Play</button>
   </div>
+
+  <audio id="audio" preload="none">
+    <source src="http://uk22freenew.listen2myradio.com:31173/;" type="audio/mpeg">
+    Je browser ondersteunt geen audio element.
+  </audio>
 
   <script>
     const audio = document.getElementById('audio');
+    const playButton = document.getElementById('playButton');
+    const playerControls = document.getElementById('playerControls');
 
     function playAudio() {
       audio.play().catch(err => {
-        alert("Autoplay is geblokkeerd. Klik nogmaals op Play.");
+        alert("Autoplay is geblokkeerd. Tik op Play om te starten.");
       });
+      playerControls.style.display = "block";
+      playButton.style.display = "none";
     }
 
     function pauseAudio() {
       audio.pause();
     }
 
-    // Optional: start automatisch zodra de gebruiker interactie heeft
-    document.body.addEventListener('click', () => {
-      if(audio.paused) audio.play().catch(()=>{});
-    }, { once: true });
+    // Grote centrale knop activeert de stream
+    playButton.addEventListener('click', playAudio);
   </script>
 </body>
 </html>
