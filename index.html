@@ -3,74 +3,67 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Live Radio Stream</title>
+<title>Live stream</title>
+
 <style>
   body {
+    background:#111;
+    color:#fff;
     font-family: Arial, sans-serif;
-    background: #111;
-    color: #fff;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    margin: 0;
-    padding: 20px;
-    text-align: center;
+    text-align:center;
+    padding:40px;
   }
-  h1 {
-    margin-bottom: 40px;
-  }
-  #playButton {
-    background: #ff5500;
-    border: none;
-    color: white;
-    padding: 20px 40px;
-    font-size: 24px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
-  #playButton:hover {
-    background: #ff7700;
+  button {
+    font-size:24px;
+    padding:20px 40px;
+    background:#ff5500;
+    border:none;
+    border-radius:10px;
+    color:white;
+    cursor:pointer;
   }
   audio {
-    margin-top: 30px;
-    width: 100%;
-    max-width: 400px;
+    margin-top:30px;
+    width:100%;
+    max-width:420px;
   }
 </style>
 </head>
+
 <body>
 
-<h1>Luister live naar mijn radio!</h1>
+<h1>Live luisteren</h1>
 
-<button id="playButton">▶ Play Stream</button>
+<button id="playBtn">Play</button>
 
-<audio id="player" preload="none" controls>
-  <source src="http://uk22freenew.listen2myradio.com:31173/;" type="audio/mpeg">
+<audio id="player" controls preload="none">
+  <source src="http://uk22freenew.listen2myradio.com:31173/;stream.mp3" type="audio/mpeg">
   Je browser ondersteunt geen audio.
 </audio>
 
 <script>
-const playButton = document.getElementById('playButton');
-const player = document.getElementById('player');
+const btn = document.getElementById("playBtn");
+const audio = document.getElementById("player");
 
-// Verberg audio-element totdat Play wordt ingedrukt (optie)
-player.style.display = 'none';
+audio.pause(); // expliciet pauzeren bij laden
 
-playButton.addEventListener('click', () => {
-  // Toon audio element
-  player.style.display = 'block';
-  
-  // Start stream
-  player.play().catch(() => {
-    alert("Klik nogmaals op Play als het niet start.");
-  });
-
-  // Verberg Play-knop
-  playButton.style.display = 'none';
+btn.addEventListener("click", () => {
+  audio.load();               
+  audio.play().catch(()=>{}); 
+  btn.style.display = "none";
 });
+
+// automatische reconnect bij stoppen of fout
+audio.addEventListener("stalled", reconnect);
+audio.addEventListener("ended", reconnect);
+audio.addEventListener("error", reconnect);
+
+function reconnect() {
+  setTimeout(() => {
+    audio.load();
+    audio.play().catch(()=>{});
+  }, 1500);
+}
 </script>
 
 </body>
