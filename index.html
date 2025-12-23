@@ -23,9 +23,13 @@
     cursor:pointer;
   }
   audio {
-    margin-top:30px;
+    margin-top:20px;
     width:100%;
     max-width:420px;
+  }
+  #status {
+    margin-top:20px;
+    font-size:18px;
   }
 </style>
 </head>
@@ -41,15 +45,22 @@
   Je browser ondersteunt geen audio.
 </audio>
 
+<div id="status">Status: Niet gestart</div>
+
 <script>
 const btn = document.getElementById("playBtn");
 const audio = document.getElementById("player");
+const status = document.getElementById("status");
 
 audio.pause(); // expliciet pauzeren bij laden
 
 btn.addEventListener("click", () => {
-  audio.load();               
-  audio.play().catch(()=>{}); 
+  audio.load();
+  audio.play().then(() => {
+    status.textContent = "Status: Stream speelt";
+  }).catch(() => {
+    status.textContent = "Status: Klik nogmaals op Play als het niet start";
+  });
   btn.style.display = "none";
 });
 
@@ -58,10 +69,20 @@ audio.addEventListener("stalled", reconnect);
 audio.addEventListener("ended", reconnect);
 audio.addEventListener("error", reconnect);
 
+// update status bij pauze
+audio.addEventListener("pause", () => {
+  status.textContent = "Status: Gestopt of onderbroken";
+});
+
 function reconnect() {
+  status.textContent = "Status: Verbinding opnieuw proberen...";
   setTimeout(() => {
     audio.load();
-    audio.play().catch(()=>{});
+    audio.play().then(() => {
+      status.textContent = "Status: Stream speelt";
+    }).catch(() => {
+      status.textContent = "Status: Klik nogmaals op Play als het niet start";
+    });
   }, 1500);
 }
 </script>
